@@ -28,53 +28,53 @@ const DetailProductPage = ({ product }: { product: ProductType }) => {
 export default DetailProductPage;
 
 // untuk fetch data secara server side rendering
-// export const getServerSideProps = async ({
-//   params,
-// }: {
-//   params: { product: string };
-// }) => {
-//   //pemanggilan params dilakukan secara destructuring
-//   // untuk memanggil api
-//   const res = await fetch(
-//     `http://localhost:3000/api/product/${params.product}`
-//   );
-//   const response = await res.json();
-//   console.log(response);
-//   return {
-//     props: {
-//       product: response.data,
-//     },
-//   };
-// };
-
-// untuk memanggil data secara static
-
-// diperlukan untuk memanggil data id yg diteruskan pada getStaticProps secara static
-export async function getStaticPaths() {
-  const res = await fetch("http://localhost:5500/api/product");
-  const response = await res.json();
-  const paths = response.data.map((p: ProductType) => ({
-    params: { product: p.id },
-  }));
-  return { paths, fallback: false };
-}
-
-export const getStaticProps = async ({
+export const getServerSideProps = async ({
   params,
 }: {
   params: { product: string };
 }) => {
+  //pemanggilan params dilakukan secara destructuring
   // untuk memanggil api
   const res = await fetch(
-    `http://localhost:5500/api/product/${params.product}`
+    `${process.env.NEXT_PUBLIC_API_URL}/api/product/${params.product}`
   );
   const response = await res.json();
+  console.log(response);
   return {
     props: {
       product: response.data,
     },
   };
 };
+
+// untuk memanggil data secara static
+
+// diperlukan untuk memanggil data id yg diteruskan pada getStaticProps secara static
+// export async function getStaticPaths() {
+//   const res = await fetch("http://localhost:5500/api/product");
+//   const response = await res.json();
+//   const paths = response.data.map((p: ProductType) => ({
+//     params: { product: p.id },
+//   }));
+//   return { paths, fallback: false };
+// }
+
+// export const getStaticProps = async ({
+//   params,
+// }: {
+//   params: { product: string };
+// }) => {
+//   // untuk memanggil api
+//   const res = await fetch(
+//     `http://localhost:5500/api/product/${params.product}`
+//   );
+//   const response = await res.json();
+//   return {
+//     props: {
+//       product: response.data,
+//     },
+//   };
+// };
 
 // pengambilan data dinamis di dapatkan dari slug yang ada di nama file yang dikasih kurung[]
 
