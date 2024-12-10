@@ -39,9 +39,19 @@ const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_OAUTH_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || "",
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
     }),
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    },
     async jwt({ token, account, profile, user }: any) {
       if (account?.provider === "credentials") {
         token.email = user?.email;
